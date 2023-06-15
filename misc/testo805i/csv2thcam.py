@@ -80,6 +80,12 @@ except ValueError as e:
     traceback.print_exc()
     print("Can not split list with length of " + str(len(temp_list)) + " into " + str(y) + " rows!")
     sys.exit(3)
+
+if input("Should I flip the image horizontally? (y/N): ") == "y":
+    array = np.fliplr(array)
+if input("Should I flip the image vertically? (y/N): ") == "y":
+    array = np.flipud(array)
+
 frame = stringify(array)
 print()
 print("timestamp = " + str(ut))
@@ -89,7 +95,7 @@ print()
 
 
 
-saveinp = input("Do you wish to export to a .thcam file (y/N): ")
+saveinp = input("Do you wish to export to a .thcam file? (y/N): ")
 
 if saveinp == "y":
     rawfile = configparser.ConfigParser(inline_comment_prefixes=" #")
