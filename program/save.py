@@ -31,7 +31,6 @@ FEED = config.FEED
 # For RAW save #
 # Accuracy
 emissivity = config.EMISSIVITY
-EMISSIVITY_BASELINE = sensor_prop.EMISSIVITY_BASELINE
 # View
 interpolation = config.INTERPOLATION
 colormap = config.COLORMAP
@@ -68,7 +67,6 @@ def raw(frame, timestamp):
 
     rawfile.add_section("Accuracy")
     rawfile.set("Accuracy", "emissivity", str(emissivity))
-    rawfile.set("Accuracy", "emissivity_baseline", str(EMISSIVITY_BASELINE))
 
     rawfile.add_section("View")
     rawfile.set("View", "interpolation", interpolation)
@@ -82,6 +80,10 @@ def raw(frame, timestamp):
     rawfile.set("Temperature_Range", "min", str(temp_range_min))
     rawfile.set("Temperature_Range", "max", str(temp_range_max))
     rawfile.set("Temperature_Range", "auto_adjust_tempbar", str(auto_adjust_tempbar))
+
+    rawfile.add_section("Save")
+    rawfile.set("Save", "prefix", PREFIX)
+    rawfile.set("Save", "suffix", SUFFIX)
 
     rawfile.add_section("Frame")
     rawfile.set("Frame", "timestamp", str(timestamp))

@@ -22,7 +22,7 @@ def read():
         print("Missing argument: No configuration file specified!")
         print("Useage: python3 program-name.py /example/path/to/configfile")
         print("                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^")
-        sys.exit(1)
+        sys.exit(2)
 
     # return config
     return config
@@ -107,7 +107,6 @@ try:
     # Frame
     TIMESTAMP                    =              int(get(config, "Frame",             "timestamp",           "0"))
     FRAME                        =    np.array(eval(get(config, "Frame",             "frame",               "[]")))
-
 
     if config.has_section("File"):
         VERSION = float(get(config, "File", "version"))

@@ -24,10 +24,11 @@ if backend != backend_raspbian and backend != backend_windows:
 
 
 
-if config.TIMESTAMP == 0: # If timestamp is 0, we know that no RAW file is loaded and we run as a camera
+if str(config.FRAME) == "[]": # If frame in config is empty, we know we are running as a camera.
     UI_MODE = "camera"
 else: # Otherwise RAW file got loaded.
     UI_MODE = "viewer"
+
 
 
 #Appearance
@@ -142,13 +143,13 @@ def refresh(frame, unix):
 
     # Text above view. Max, Avg, Min
     if not temp_range or temp_min >= temp_range_min and temp_max <= temp_range_max:
-        plt.title(f"Max Temp: {temp_max:.1f} °C    Avg Temp: {temp_avg:.1f} °C    Min Temp: {temp_min:.1f} °C", color=color_fg_set)
+        plt.title(f"Max: {temp_max:.1f} °C            Avg: {temp_avg:.1f} °C            Min: {temp_min:.1f} °C", color=color_fg_set)
     elif temp_min < temp_range_min and temp_max <= temp_range_max:
-        plt.title(f"Max Temp: {temp_max:.1f} °C    Avg Temp: {temp_avg:.1f} °C    *Min Temp: {temp_min:.1f} °C", color=color_fg_set)
+        plt.title(f"Max: {temp_max:.1f} °C    Avg: {temp_avg:.1f} °C    *Min: {temp_range_min:.1f} °C ({temp_min:.1f} °C)", color=color_fg_set)
     elif temp_min >= temp_range_min and temp_max > temp_range_max:
-        plt.title(f"*Max Temp: {temp_max:.1f} °C    Avg Temp: {temp_avg:.1f} °C    Min Temp: {temp_min:.1f} °C", color=color_fg_set)
+        plt.title(f"*Max: {temp_range_max:.1f} °C ({temp_max:.1f} °C)    Avg: {temp_avg:.1f} °C    Min: {temp_min:.1f} °C", color=color_fg_set)
     elif temp_min < temp_range_min and temp_max > temp_range_max:
-        plt.title(f"*Max Temp: {temp_max:.1f} °C    Avg Temp: {temp_avg:.1f} °C    *Min Temp: {temp_min:.1f} °C", color=color_fg_set)
+        plt.title(f"*Max: {temp_range_max:.1f} °C ({temp_max:.1f} °C)    Avg: {temp_avg:.1f} °C    *Min: {temp_range_min:.1f} °C ({temp_min:.1f} °C)", color=color_fg_set)
 
     plt.ylabel(dt.iso(unix), color = color_fg_set)  # Datetime
 
