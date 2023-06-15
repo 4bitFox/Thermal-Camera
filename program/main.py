@@ -1,3 +1,5 @@
+#!/bin/python3
+
 from time import sleep
 import ui
 import frametools
