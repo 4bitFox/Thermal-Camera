@@ -6,7 +6,6 @@ sensor = mlx90640
 
 [Accuracy]
 emissivity = 0.95
-emissivity_baseline = 1
 
 [View]
 interpolation = gaussian
