@@ -4,7 +4,7 @@ cls
 
 
 @echo on
-python3 csv_to_2D-list.py %1
+python3 csv2thcam.py %1
 
 @echo off
 if %errorlevel% neq 0 (
