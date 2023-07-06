@@ -64,3 +64,6 @@ These pictures can then be read e.g. by a website that displays the pictures and
 
 ### overheat.py
 Handles what should happen when the Camera gets a little too sweatty.
+
+### img/confgui.py
+Contains images in base64. I offloaded it to a seperate file so I can keep the nice code scanning features of PyCharm working. :-)
