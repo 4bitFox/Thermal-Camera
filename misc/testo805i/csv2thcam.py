@@ -86,6 +86,8 @@ if input("Should I flip the image horizontally? (y/N): ") == "y":
 if input("Should I flip the image vertically? (y/N): ") == "y":
     array = np.flipud(array)
 
+array += 273.15 # Convert to Kelvin
+
 frame = stringify(array)
 print()
 print("timestamp = " + str(ut))
