@@ -42,3 +42,25 @@ Responsible for printing nice and stylish messages to the terminal.
 
 ### save.py
 Responsible for preparing and saving a RAW file and a Image file.
+
+### trigger.py
+Responsible for triggering a save in various ways.
+- Button press
+- Visually via temperature and area detection.
+- Periodically at a certain time interval
+
+### ui.py
+Makes a nice window that displays the thermal image and a temprature bar next to it. In Viewer mode it also displays a toolbar.
+
+### buzzer.py
+Sets up the GPIO interface for a buzzer and has presets for buzzing.
+
+### led.py
+Sets up the GPIO interface for a led and has presets for blinking.
+
+### feed.py
+Stores a seperate copy of the captured images and names them numerically in order. 0 being the latest capture and the number increasing as the images get older. It automatically deletes images that are older than the user specifies in the config. 
+These pictures can then be read e.g. by a website that displays the pictures and refreshes periodically to always show the latest captures.
+
+### overheat.py
+Handles what should happen when the Camera gets a little too sweatty.
