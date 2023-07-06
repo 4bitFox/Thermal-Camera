@@ -2,20 +2,20 @@ import dt
 import config
 
 
-SAVE_PREFIX = config.SAVE_PREFIX
-SAVE_SUFFIX = config.SAVE_SUFFIX
+
+cfg = config.get_dict()
+
+SAVE_PREFIX = cfg["save_prefix"]
+SAVE_SUFFIX = cfg["save_suffix"]
 
 
 # Abbreiations
-ABRV_PERFORMANCE = "PERF"
 ABRV_SAVE = "SAVE"
-ABRV_BUTTON = "BTTN"
-ABRV_PIXEL_TEST = "TEST"
-ABRV_AUTOTRIGGER = "ATRG"
 ABRV_DEBUG = "DBUG"
-AVRV_VALUEERROR = "VERR"
 ABRV_OTHERERROR = "OERR"
 ABRV_OVERHEATING = "HEAT"
+ABRV_VISUAL_TRIGGER = "VIST"
+ABRV_MONITOR = "MONI"
 
 PRINT_DEBUG = True
 PRINT_SAVE = True
@@ -39,3 +39,9 @@ def save(message):
 
 def overheating(message):
     printf(ABRV_OVERHEATING, message)
+
+def visual_trigger_percent(percent):
+    printf(ABRV_VISUAL_TRIGGER, str(round(float(percent), 2)) + " % in range.")
+
+def monitor_percent(percent):
+    printf(ABRV_MONITOR, str(round(float(percent), 2)) + " % in range.")

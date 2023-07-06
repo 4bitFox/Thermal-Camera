@@ -2,26 +2,29 @@
 
 from time import sleep
 import ui
+ui.init()
 import frametools
 import save
 import overheat
 import config
 
+cfg = config.get_dict()
+
 # Load sensor type from config and load required module
 from importlib import import_module
-sensor = import_module("sensor." + config.SENSOR)
+sensor = import_module("sensor." + cfg["sensor"])
 
 import trigger
+trigger.init()
 import monitor
-import buzzer
 
 
-monitor_temps = config.TEST_PIXELS
+monitor_temps = cfg["monitor"]
 
-monitor_list = config.TEST_ARRAY
-trigger_list = config.PIXEL_TRIGGER_ARRAY
-trigger_visual = config.PIXEL_TRIGGER
-trigger_periodic = config.PERIODIC_TRIGGER
+monitor_list = cfg["monitor_test_list"]
+trigger_list = cfg["trigger_visual_test_list"]
+trigger_visual = cfg["trigger_visual"]
+trigger_periodic = cfg["trigger_periodic"]
 
 
 while True:
@@ -35,11 +38,14 @@ while True:
 
     overheat.cpu_protect()
 
+    # Apply adjustments
+    frame_adjusted = frametools.adjust_emissivity(frame_latest)  # Emissivity
+
     if monitor_temps:
-        monitor.temps(frame_latest, monitor_list)
+        monitor.temps(frame_adjusted, monitor_list)
 
     if trigger_visual:
-        trigger.visual(frame_latest, trigger_list)
+        trigger.visual(frame_adjusted, trigger_list)
 
     if trigger_periodic:
         trigger.periodic()
@@ -47,7 +53,5 @@ while True:
     # Check if save has been triggered
     save.pending()
 
-    # Apply emissivity adjustment
-    frame_adjusted = frametools.adjust_emissivity(frame_latest)
     # Display frame
     ui.refresh(frame_adjusted, utime_latest)

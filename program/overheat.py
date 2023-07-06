@@ -2,13 +2,14 @@ from time import sleep
 import os
 import printf
 import ui
-import buzzer
+import config
 
 OVERHEAT_ALERT_TEMP = 80 #Temperature to start alert
 OVERHEAT_ALERT_BUZZER = True #Alert with buzzer
 OVERHEAT_POWEROFF = True #Poweroff when too hot
-OVERHEAT_POWEROFF_TEMP = 82 #Poweroff temp
+OVERHEAT_POWEROFF_TEMP = 87 #Poweroff temp
 
+cfg = config.get_dict()
 
 def temp_cpu():
     temp = os.popen("vcgencmd measure_temp").readline() #Read Raspberry Pi temp
@@ -20,7 +21,8 @@ def cpu_protect():
     temp = temp_cpu()
 
     if temp >= OVERHEAT_ALERT_TEMP:
-        if OVERHEAT_ALERT_BUZZER:
+        if OVERHEAT_ALERT_BUZZER and cfg["buzzer"]:
+            import buzzer
             buzzer.overheating_alarm()
 
         if OVERHEAT_POWEROFF and temp >= OVERHEAT_POWEROFF_TEMP:

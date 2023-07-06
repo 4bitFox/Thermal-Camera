@@ -1,0 +1,1 @@
+pylepton    2023-06-13    https://github.com/groupgets/pylepton/tree/lepton3-dev    Quick and dirty pure python library for interfacing with FLIR lepton

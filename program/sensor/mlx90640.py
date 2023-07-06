@@ -27,4 +27,5 @@ def get_frame():
     frame_array = frame_array_new #Store read frame into variable
     frame_array = np.reshape(frame_array, SENSOR_SHAPE) #Reshape array to Sensor size. Results in 2D array
     frame_array = np.fliplr(frame_array) #Flip array left to right
+    frame_array += 273.15
     return frame_array

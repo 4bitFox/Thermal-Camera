@@ -1,24 +1,27 @@
-import warnings
+#import warnings
 import config
 
 
-warnings.warn("Unknown sensor! Specify compatible sensor in config file.", UserWarning)
+SENSOR_SHAPE = None
+SENSOR_EMISSIVITY = 1 #Correct sensor emissivity baseline. (Should not be necessary)
 
-conf = config.read()
+print("Unknown sensor!")
+
 
 # Try to get resolution from frame:
-if conf.has_option("Frame", "frame"):
-    print("Trying to get the resolution from Frame instead.")
-    frame = config.FRAME
-    y = len(frame)
-    x = len(frame[0])
+def sensor_shape(cfg = config.get_dict()):
+    if str(cfg["frame"]) != "[]":
+        print("Trying to get the sensor resolution from Frame.")
+        frame = cfg["frame"]
+        y = len(frame)
+        x = len(frame[0])
+    else:
+        raise Exception("Specify a supported sensor in the config file!")
+        sys.exit("Unknown Sensor")
 
-    SENSOR_SHAPE = (y, x)  # resolution of Sensor. Required in all Sensor modules!
-
-else:
-    raise Exception("Specify a supported sensor in the config file!")
-    sys.exit("Unknown Sensor")
+    return (y, x)  # resolution of Sensor. Required in all Sensor modules!
 
 
-
-EMISSIVITY_BASELINE = 1 #Correct sensor emissivity baseline. (Should not be necessary)
+def init(cfg = config.get_dict()):
+    global SENSOR_SHAPE
+    SENSOR_SHAPE = sensor_shape(cfg)

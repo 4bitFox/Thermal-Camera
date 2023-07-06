@@ -5,43 +5,52 @@ import dt
 import ui
 import printf
 import feed
+import os
 from importlib import import_module
-SENSOR = config.SENSOR
+
+
+
+cfg = config.get_dict()
+
+SENSOR = cfg["sensor"]
 sensor_prop = import_module("sensor." + SENSOR + "_prop")
 
 SENSOR_SHAPE = sensor_prop.SENSOR_SHAPE
 
 
 #Save
-SAVE_IMG = True
-SAVE_RAW = True
-PREFIX = config.SAVE_PREFIX
-SUFFIX = config.SAVE_SUFFIX
-PATH = config.SAVE_PATH
-FILEFORMAT = config.SAVE_FILEFORMAT
+SAVE_IMG = cfg["save_image"]
+SAVE_RAW = cfg["save_raw"]
+PREFIX = cfg["save_prefix"]
+SUFFIX = cfg["save_suffix"]
+PATH = cfg["save_path"]
+FILEFORMAT = cfg["save_image_format"]
 TEMP_ALARM_VISIBLE = True
 RAW_ROUND = True #Round array numbers
 RAW_ROUND_DECIMALS = 2 #Number of decimal places
-BUZZER = config.BUZZER
-SAVE_BUZZER = config.SAVE_BUZZER
+BUZZER = cfg["buzzer"]
+SAVE_BUZZER = cfg["save_buzzer"]
+LED = cfg["led"]
+SAVE_LED = cfg["save_led"]
 
-FEED = config.FEED
+FEED = cfg["feed"]
 
 
 # For RAW save #
 # Accuracy
-emissivity = config.EMISSIVITY
+emissivity = cfg["emissivity"]
 # View
-interpolation = config.INTERPOLATION
-colormap = config.COLORMAP
-limits = config.LIMITS
-limits_x = config.LIMITS_X
-limits_y = config.LIMITS_Y
+unit_temperature = cfg["unit_temperature"]
+interpolation = cfg["interpolation"]
+colormap = cfg["colormap"]
+limits = cfg["limits"]
+limits_x = cfg["limits_x"]
+limits_y = cfg["limits_y"]
 # Temperature Range
-temp_range = config.TEMP_RANGE
-temp_range_min = config.TEMP_RANGE_MIN
-temp_range_max = config.TEMP_RANGE_MAX
-auto_adjust_tempbar = config.AUTO_ADJUST_TEMPBAR
+temp_range = cfg["temp_range"]
+temp_range_min = cfg["temp_range_min"]
+temp_range_max = cfg["temp_range_max"]
+auto_adjust_tempbar = cfg["temp_range_autoadjust"]
 
 
 
@@ -69,6 +78,7 @@ def raw(frame, timestamp):
     rawfile.set("Accuracy", "emissivity", str(emissivity))
 
     rawfile.add_section("View")
+    rawfile.set("View", "unit_temperature", unit_temperature)
     rawfile.set("View", "interpolation", interpolation)
     rawfile.set("View", "colormap", colormap)
     rawfile.set("View", "limits_enable", str(limits))
@@ -109,6 +119,7 @@ def image(frame, timestamp):
     ui.refresh(frame, timestamp)
     # Save
     path = PATH + "/" + PREFIX + dt.simple(timestamp) + SUFFIX + "." + FILEFORMAT
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     ui.plt.savefig(path, format=FILEFORMAT)
 
     printf.save("Saved " + path)
@@ -134,6 +145,9 @@ def pending():
         if BUZZER and SAVE_BUZZER:
             import buzzer
             buzzer.save_triggered() # Acoustic notification for save.
+        if LED:
+            import led
+            led.save()
         frame = frametools.frame_store[0]  # Get the wanted frame, be it current or a previous frame.
         timestamp = frametools.utime_store[0] # Get the timestamp of the corresponding frame
         if SAVE_IMG:

@@ -4,12 +4,16 @@ import traceback
 import config
 import printf
 
-FILEFORMAT = config.SAVE_FILEFORMAT
+
+
+cfg = config.get_dict()
+
+FILEFORMAT = cfg["save_image_format"]
 
 #Feed
-FEED = config.FEED #When True, save images to feed to be displayed on a html page
-LENGTH = config.FEED_LENGTH #How many older pictures to show in the feed
-PATH = config.FEED_PATH
+FEED = cfg["feed"] #When True, save images to feed to be displayed on a html page
+LENGTH = cfg["feed_length"] #How many older pictures to show in the feed
+PATH = cfg["feed_path"]
 
 
 

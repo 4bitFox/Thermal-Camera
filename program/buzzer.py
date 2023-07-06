@@ -3,7 +3,11 @@ from time import sleep
 import multiprocessing as mp
 import config
 
-GPIO_BUZZER = config.BUZZER_PIN
+
+
+cfg = config.get_dict()
+
+GPIO_BUZZER = cfg["buzzer_pin"]
 DUTY_CYCLE = 50 # % duty cycle
 
 #GPIO PWM buzzer
@@ -42,7 +46,7 @@ def save_triggered():
 
 def _temp_alarm():
     freq1 = 800
-    time_buzz = 0.1
+    time_buzz = 0.05
 
     _buzz(freq1, time_buzz)
 
