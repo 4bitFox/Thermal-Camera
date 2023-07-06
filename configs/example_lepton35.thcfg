@@ -1,0 +1,59 @@
+[Hardware]
+sensor = lepton35
+buzzer = True
+buzzer_pin = 13
+led = True
+led_pin = 21
+
+[Accuracy]
+emissivity = 0.95
+
+[View]
+unit_temperature = celsius
+interpolation = gaussian  # https://matplotlib.org/stable/_images/sphx_glr_interpolation_methods_001.png
+colormap = nipy_spectral # https://matplotlib.org/stable/tutorials/colors/colormaps.html (append "_r" ro get reversed colormap)
+limits_enable = False
+limits_x = 0, 159
+limits_y = 119, 0
+
+[Temperature_Range]
+enable = False
+min = 263.15
+max = 723.15
+auto_adjust = False
+
+[Save]
+prefix = thcam02_
+suffix = 
+path = /home/pi/thcam/saves/default
+raw = True
+image = True
+format = png
+buzzer = False
+led = True
+
+[Monitor]
+enable = False
+invert = False
+max_deviations = 0
+buzzer = False
+test_list = [] # [[Ymin, Xmin, Ymax, Xmax, Kmin, Kmax], [...], ...] (Y0, X0 is top left!)
+
+[Trigger_Buttons]
+pins = 12, 26
+
+[Trigger_Visual]
+enable = False
+invert = False
+previous_frame = 1
+max_deviations = 0
+test_list = [] # [[Ymin, Xmin, Ymax, Xmax, Kmin, Kmax], [...], ...] (Y0, X0 is top left!)
+
+[Trigger_Periodic]
+enable = False
+interval = 60
+
+[Feed]
+enable = True
+path = /home/pi/thcam/feed
+length = 9
