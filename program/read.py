@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 ## Reads RAW file and displays it.
 import os.path
 import sys
