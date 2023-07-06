@@ -23,7 +23,7 @@ max = 373.15
 auto_adjust = False
 
 [Save]
-prefix = thcam01_
+prefix = THC_
 suffix = 
 path = /home/pi/thcam/saves/default
 raw = True
