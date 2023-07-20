@@ -1,5 +1,5 @@
 ### Suported thermal sensors:
-- MLX90640
+- MLX90640 (pimoroni)
 - Lepton 3.5 (via the FLIR Lepton Camera Breakout Board v2.0)
 
 ### Thermal Camera main program:
