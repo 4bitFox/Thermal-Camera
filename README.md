@@ -1,3 +1,5 @@
+# [Thermal Camera](https://github.com/4bitFox/Thermal-Camera)
+
 ### Suported thermal sensors:
 - MLX90640 (pimoroni)
 - Lepton 3.5 (via the FLIR Lepton Camera Breakout Board v2.0)
