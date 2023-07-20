@@ -1,1 +1,0 @@
-v4l2lepton3    2023-07-14    https://gitlab.com/CharvN/v4l2lepton3    v4l2lepton3 is a pack of tools that allows to interact with the Lepton 3.5 (should work also for version 3.0).
