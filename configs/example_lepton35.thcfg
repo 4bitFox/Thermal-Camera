@@ -28,7 +28,7 @@ suffix =
 path = /home/pi/thcam/saves/default
 raw = True
 image = True
-format = png
+image_format = png
 buzzer = False
 led = True
 
