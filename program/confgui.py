@@ -451,7 +451,7 @@ def roi_selector(input_list = []):
 def viewer_raw(cfg):
     try:
         import read
-        read.read(cfg)  ############################################################
+        read.read(cfg)
     except Exception as e:
         import traceback
 
