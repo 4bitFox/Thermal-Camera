@@ -93,7 +93,7 @@ def init(cfg = config.get_dict()):
 
 
     # Preview and Tepmerature bar
-    therm1 = ax.imshow(frametools.empty(cfg = cfg), interpolation=interpolation, cmap=colormap)
+    therm1 = ax.imshow(frametools.empty(cfg = cfg), interpolation=interpolation, cmap=colormap) # Create initial imshow plot. Has to get resolution right for correct aspect ratio.
 
     if "overlay" in cfg and "overlay_data" in cfg:
         if cfg["overlay"]:

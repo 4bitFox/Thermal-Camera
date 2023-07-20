@@ -95,6 +95,18 @@ def save_config_out(values, tab_override = None, dryrun = False):
         sg.popup_ok("'Temp. Unit' field is invalid! Unknown unit: " + values["temp_range_unit"] + "\nAborted.", title="Write", image=img_base64_bad)
         return "aborted"
 
+    trigger_button_pins = values["trigger_button_pins"].replace("(", "").replace(",)", "").replace(")", "")
+    if trigger_button_pins[-1] == ",": # Remove trailing period to prevent crash when config file is read
+        trigger_button_pins = trigger_button_pins[:-1]
+
+    save_path = values["save_path"]
+    if save_path[-1] == "/":  # Remove trailing slash.
+        save_path = save_path[:-1]
+
+    feed_path = values["feed_path"]
+    if feed_path[-1] == "/":  # Remove trailing slash.
+        feed_path = feed_path[:-1]
+
     cfg_out = config.obj()
 
     cfg_out.add_section("Hardware")
@@ -150,7 +162,7 @@ def save_config_out(values, tab_override = None, dryrun = False):
         cfg_out.set("Monitor", "test_list", values["monitor_test_list"])
 
         cfg_out.add_section("Trigger_Buttons")
-        cfg_out.set("Trigger_Buttons", "pins", values["trigger_button_pins"].replace("(", "").replace(",)", "").replace(")", ""))
+        cfg_out.set("Trigger_Buttons", "pins", trigger_button_pins)
 
         cfg_out.add_section("Trigger_Visual")
         cfg_out.set("Trigger_Visual", "enable", str(values["trigger_visual"]))
@@ -163,10 +175,10 @@ def save_config_out(values, tab_override = None, dryrun = False):
         cfg_out.set("Trigger_Periodic", "enable", str(values["trigger_periodic"]))
         cfg_out.set("Trigger_Periodic", "interval", values["trigger_periodic_interval"])
 
-        cfg_out.set("Save", "path", values["save_path"])
+        cfg_out.set("Save", "path", save_path)
         cfg_out.set("Save", "raw", str(values["save_raw"]))
         cfg_out.set("Save", "image", str(values["save_image"]))
-        cfg_out.set("Save", "format", values["save_image_format"])
+        cfg_out.set("Save", "image_format", values["save_image_format"])
         cfg_out.set("Save", "buzzer", str(values["save_buzzer"]))
         cfg_out.set("Save", "led", str(values["save_led"]))
 
@@ -261,6 +273,8 @@ def main():
     trigger_visual_test_list_stringifyed = frametools.stringify(cfg["trigger_visual_test_list"])
 
     trigger_button_pins = str(cfg["trigger_button_pins"]).replace("(", "").replace(")", "")
+    if trigger_button_pins[-1] == ",": # Remove trailing period to prevent crash when config file is read
+        trigger_button_pins = trigger_button_pins[:-1]
 
     l_config = [
                 [sg.Text("Buzzer:", size=size_text_l), sg.Checkbox("enable", default=cfg["buzzer"], size=size_text_l, key="buzzer"), sg.Text("GPIO pin:", size_text_l), sg.Input(cfg["buzzer_pin"], size=size_text_num, key="buzzer_pin"), sg.Push(), sg.Button("ⓘ", key="buzzer_help")],
@@ -280,11 +294,11 @@ def main():
                 [sg.HorizontalSeparator()],
                 [sg.Text("Timed Trigger:", size_text_l), sg.Checkbox("enable", default=cfg["trigger_periodic"], size=size_text_l, key="trigger_periodic"), sg.Input(cfg["trigger_periodic_interval"], size=size_text_med, key="trigger_periodic_interval"), sg.Text("s"), sg.Push(), sg.Button("ⓘ", key="trigger_periodic_help")],
                 [sg.HorizontalSeparator()],
-                [sg.Text("Save Path:", size=size_text_l), sg.Input(cfg["save_path"], key="save_path"), sg.FileSaveAs("Browse")],
                 [sg.Text("Save Files:", size=size_text_l), sg.Checkbox("RAW File", size=size_text_l, default=cfg["save_raw"], key="save_raw"), sg.Checkbox("Image File:", size=(8, None), default=cfg["save_image"], key="save_image"), sg.Combo(list_save_image_format, default_value=cfg["save_image_format"], size=size_text_num, key="save_image_format"), sg.Push(), sg.Button("ⓘ", key="save_help")],
+                [sg.Text("Save Path:", size=size_text_l), sg.Input(cfg["save_path"], key="save_path"), sg.FileSaveAs("Browse")],
                 [sg.Text("Buzz on save:", size=size_text_l), sg.Checkbox("enable", default=cfg["save_buzzer"], size=size_text_l, key="save_buzzer"), sg.Text("LED on save:", size_text_l), sg.Checkbox("enable", default=cfg["save_led"], size=size_text_l, key="save_led")],
                 [sg.HorizontalSeparator()],
-                [sg.Text("Feed:", size=size_text_l), sg.Checkbox("enable", default=cfg["feed"], size=size_text_l, key="feed"), sg.Text("Length:", size=size_text_l), sg.Input(cfg["feed_length"], size=size_text_num, key="feed_length"), sg.Push(), sg.Button("ⓘ", key="feed_help")],
+                [sg.Text("Feed:", size=size_text_l), sg.Checkbox("enable", default=cfg["feed"], size=size_text_l, key="feed"), sg.Text("length:", size=size_text_l), sg.Input(cfg["feed_length"], size=size_text_num, key="feed_length"), sg.Push(), sg.Button("ⓘ", key="feed_help")],
                 [sg.Text("Feed Path:", size=size_text_l), sg.Input(cfg["feed_path"], key="feed_path"), sg.FileSaveAs("Browse")],
                 ]
 
@@ -292,12 +306,12 @@ def main():
                 [sg.Text("File version:", size=size_text_l), sg.Text("input:    " + str(cfg["version"]), size=(14, None)), sg.Text("output:    " + str(file_version_output), size=(14, None))],
                 [sg.Text("Timestamp:", size=size_text_l), sg.Input(cfg["timestamp"], size=size_text_med, key="timestamp"), sg.Text("  " + dt.iso(cfg["timestamp"]), key="datetime_iso"), sg.Push(), sg.Button("ⓘ", key="timestamp_help")],
                 [sg.Text("Frame data:", size=size_text_l), sg.Button("View", key="frame_view"), sg.Push(), sg.Button("ⓘ", key="frame_help")],
-                [sg.Multiline(frame_stringifyed, size=(65, 31), key="frame")],
+                [sg.Multiline(frame_stringifyed, size=(65, 27), key="frame")],
                 ]
 
     l_main =    [
                 [sg.Text("Sensor:", size=size_text_l), sg.Combo(list_sensor, default_value=cfg["sensor"], key="sensor", size=size_combo)],
-                [sg.Text("Emissivity:", size=size_text_l), sg.Slider((0, 1), default_value=cfg["emissivity"], resolution=0.01, orientation="horizontal", disable_number_display=True, key="emissivity_slider", enable_events=True), sg.Input(cfg["emissivity"], key="emissivity", size=(4, None))],
+                [sg.Text("Emissivity:", size=size_text_l), sg.Slider((0.01, 1), default_value=cfg["emissivity"], resolution=0.01, orientation="horizontal", disable_number_display=True, key="emissivity_slider", enable_events=True), sg.Input(cfg["emissivity"], key="emissivity", size=(4, None))],
                 [sg.HorizontalSeparator()],
                 [sg.Text("Temp. Unit:", size=size_text_l), sg.Combo(list_units_temperature, key="unit_temperature", default_value=cfg["unit_temperature"])],
                 [sg.Text("Interpolation:", size=size_text_l), sg.Combo(list_interpolation, key="interpolation", default_value=cfg["interpolation"], size=size_combo), sg.Push(), sg.Button("ⓘ", key="interpolation_help")],
@@ -318,17 +332,17 @@ def main():
                 [sg.HorizontalSeparator()],
                 [sg.Text("Input File:", size=size_text_l, font=font_important), sg.Input(file_input, key="file_input", background_color=color_button_read[1], text_color=color_button_read[0]), sg.FileBrowse(button_color=color_button_read)],
                 [sg.Text("Output File:", size=size_text_l, font=font_important), sg.Input(file_output, key="file_output", background_color=color_button_write[1], text_color=color_button_write[0]), sg.FileSaveAs("Browse", button_color=color_button_write)],
-                [sg.Button("Write to Output File", key="Write", button_color=color_button_write, font=font_important), sg.Button("Read from Input File", key="Read", button_color=color_button_read, font=font_important), sg.Push(), sg.Text("", key="theme_text"), sg.Button("シ", key="theme", tooltip="Apply random theme"), sg.Button("Quit")],
+                [sg.Button("Write to Output File", key="Write", button_color=color_button_write, font=font_important), sg.Button("Read from Input File", key="Read", button_color=color_button_read, font=font_important), sg.Push(), sg.Text("", key="theme_text", size=(14, None)), sg.Button("シ", key="theme", tooltip="Apply random theme"), sg.Button("Quit")],
                 ]
 
     return sg.Window("Thermal Camera Config Manager", l_main, icon=img_base64_icon)
 
-def roi_selector_column_area(i, x_min = "", y_min = "", x_max = "", y_max = "", temp_min = "", temp_max = ""):
-    l_column =  [
+def roi_selector_row(i, x_min = "", y_min = "", x_max = "", y_max = "", temp_min = "", temp_max = ""):
+    l_row =  [
                 [sg.Text(str(i) + ":", size=(2, None)), sg.Input(x_min, size=size_text_num, key=("area_x_min", i)), sg.Input(y_min, size=size_text_num, key=("area_y_min", i)), sg.Input(x_max, size=size_text_num, key=("area_x_max", i)), sg.Input(y_max, size=size_text_num, key=("area_y_max", i)), sg.Input(temp_min, size=size_text_num, key=("area_temp_min", i)), sg.Input(temp_max, size=size_text_num, key=("area_temp_max", i))],
                 ]
 
-    return l_column
+    return l_row
 
 
 
@@ -337,14 +351,14 @@ def _roi_selector():
 
     roi_unit = "celsius"
 
-    l_column_area = [
+    l_row = [
                 [sg.Text("", size=(2, None)), sg.Text(" Area:", size=(30, None)), sg.Text("Temp:")],
                 [sg.Text("", size=(2, None)), sg.Text("  x min.", size=size_text_num_col), sg.Text("  y min.", size=size_text_num_col), sg.Text("  x max.", size=size_text_num_col), sg.Text("  y max.", size=(size_text_num_col)), sg.VerticalSeparator(), sg.Text(" min.", size=size_text_num_col), sg.Text(" max.", size=(7, None))],
     ]
 
     l_main =    [
-                [sg.Column(l_column_area, key='Column_area')],
-                [sg.Button("Add column", key="add_column_area"), sg.Text(size=(23, None)), sg.Combo(list_units_temperature, default_value=roi_unit, key="roi_unit_temperature", size=(14, None))],
+                [sg.Column(l_row, key='row')],
+                [sg.Button("Add row", key="add_row"), sg.Text(size=(23, None)), sg.Combo(list_units_temperature, default_value=roi_unit, key="roi_unit_temperature", size=(14, None))],
                 [sg.HorizontalSeparator()],
                 [sg.Button("Apply and return", key="return"), sg.Button("Read", key="read"), sg.Push(), sg.Button("ⓘ", key="roi_selector_help"), sg.Button("Discard", key="discard")],
                 ]
@@ -353,11 +367,12 @@ def _roi_selector():
 
 def roi_selector(input_list = []):
     window_as = _roi_selector()
-    area_column_i = 0
+    area_row_i = 0
     while True:
         event_as, values_as = window_as.read(timeout=100)
 
         if event_as == sg.WIN_CLOSED or event_as == "discard":
+            window_as.close()
             break
 
         if event_as == "read":
@@ -378,16 +393,16 @@ def roi_selector(input_list = []):
                     sg.popup_ok("Invalid temperature unit!", title="ROI", image=img_base64_bad)
                     return None
 
-                window_as.extend_layout(window_as["Column_area"], roi_selector_column_area(area_column_i, x_min = x_min, y_min = y_min, x_max = x_max, y_max = y_max, temp_min = temp_min, temp_max = temp_max))
-                area_column_i += 1
+                window_as.extend_layout(window_as["row"], roi_selector_row(area_row_i, x_min = x_min, y_min = y_min, x_max = x_max, y_max = y_max, temp_min = temp_min, temp_max = temp_max))
+                area_row_i += 1
 
-        if event_as == "add_column_area":
-            window_as.extend_layout(window_as["Column_area"], roi_selector_column_area(area_column_i))
-            area_column_i += 1
+        if event_as == "add_row":
+            window_as.extend_layout(window_as["row"], roi_selector_row(area_row_i))
+            area_row_i += 1
 
         if event_as == "return":
             list_area = []
-            for i in range(area_column_i):
+            for i in range(area_row_i):
                 try:
                     if values_as["roi_unit_temperature"] == "kelvin":
                         temp_min = float(values_as["area_temp_min", i])
@@ -405,22 +420,22 @@ def roi_selector(input_list = []):
                     y_max = int(values_as["area_y_max", i].split(".")[0])
                     x_max = int(values_as["area_x_max", i].split(".")[0])
 
-                    list_area_column = []
-                    list_area_column.append(y_min)
-                    list_area_column.append(x_min)
-                    list_area_column.append(y_max)
-                    list_area_column.append(x_max)
-                    list_area_column.append(temp_min)
-                    list_area_column.append(temp_max)
+                    list_area_row = []
+                    list_area_row.append(y_min)
+                    list_area_row.append(x_min)
+                    list_area_row.append(y_max)
+                    list_area_row.append(x_max)
+                    list_area_row.append(temp_min)
+                    list_area_row.append(temp_max)
 
-                    list_area.append(list_area_column)
+                    list_area.append(list_area_row)
                 except ValueError as e:
                     import traceback
 
                     print("Row " + str(i) + " in Pixels contains invalid entries! It has been skipped.")
                     traceback.print_exc()
                     print(str(e))
-                    sg.popup_error("Column " + str(i) + " in Pixels contains invalid entries! It has been skipped. \n\nError:" + str(e)[:1000], title="ROI", image=img_base64_exception, background_color=color_popup_exception[1], text_color=color_popup_exception[0])
+                    sg.popup_error("Row " + str(i) + " in Pixels contains invalid entries! It has been skipped. \n\nError:" + str(e)[:1000], title="ROI", image=img_base64_exception, background_color=color_popup_exception[1], text_color=color_popup_exception[0])
 
             list_area_stringifyed = frametools.stringify(np.array(list_area))
             window_as.close()
@@ -497,7 +512,7 @@ def check_input(value, check):
             if "-" in value:
                 raise Exception
         except Exception:
-            sg.popup_ok("Value must only contain characters '0'-'9', ',' and ' '! \n\nEntered value is: " + str(value[:1000]), title="Invalid Input",image=img_base64_bad)
+            sg.popup_ok("Value must only contain characters '0'-'9', ',' and ' '! It must also not end with a period ','! \n\nEntered value is: " + str(value[:1000]), title="Invalid Input",image=img_base64_bad)
             return False
     elif check == "array_noletters":
         try:
@@ -505,7 +520,7 @@ def check_input(value, check):
             if value.upper().isupper():
                 raise Exception
         except Exception:
-            sg.popup_ok("Value must only contain characters '0'-'9', ',', '[', ']'and ''! It must be a valid list and all sections have to be the same length! \n[[1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6]] would be valid. \n[[1, 2, 3, 4, 5, 6], [1, 2, 3, 4]] would be invalid because the secions are not the same length. \n\nEntered value is: " + str(value[:1000]), title="Invalid Input",image=img_base64_bad)
+            sg.popup_ok("Value must only contain characters '0'-'9', ',', '[', ']'and ''! It also must be a valid list and all sections have to be the same length! \n[[1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6]] would be valid. \n[[1, 2, 3, 4, 5, 6], [1, 2, 3, 4]] would be invalid because the secions are not the same length. \n\nEntered value is: " + str(value[:1000]), title="Invalid Input",image=img_base64_bad)
             return False
 
     return True
@@ -514,6 +529,7 @@ def check_input(value, check):
 
 load_config_ui()
 sg.theme(theme)
+sg.SetOptions(font=(None, 10), element_padding=(3, 2))
 window = main()
 
 
@@ -578,11 +594,11 @@ while True:
     window["emissivity_slider"].bind("<ButtonRelease-1>", "_Slide")
     if event == "emissivity" + "_Enter" or event == "emissivity" + "_FocusOut":
         try:
-            if float(values["emissivity"]) >= 0 and float(values["emissivity"]) <= 1:
+            if float(values["emissivity"]) >= 0.01 and float(values["emissivity"]) <= 1:
                 window.Element("emissivity_slider").Update(values["emissivity"])
             else:
                 window.Element("emissivity").Update(values["emissivity_slider"])
-                sg.popup_ok("Emissivity value must be between 0 and 1! Entered value is " + str(values["emissivity"] + "."), title="Emissivity", image=img_base64_bad)
+                sg.popup_ok("Emissivity value must be between 0.01 and 1! Entered value is " + str(values["emissivity"] + "."), title="Emissivity", image=img_base64_bad)
         except ValueError:
             window.Element("emissivity").Update(values["emissivity_slider"])
             sg.popup_ok("Emissivity value must be numerical! \n\nEntered value is " + str(values["emissivity"] + "."), title="Emissivity", image=img_base64_bad)

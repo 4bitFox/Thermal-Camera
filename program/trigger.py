@@ -43,7 +43,7 @@ def visual(frame, trigger_list, cfg = config.get_dict()):
 
     result = monitor.test_area(frame, trigger_list) # Test if pixels in tolerance
     result_percent = 100 / (result[0] + result[1]) * result[0]
-    if trigger_visual_invert:
+    if not trigger_visual_invert: # Opposite behaviour to monitor.py => temps()
         result_percent = 100 - result_percent
 
     # Print when percent changes

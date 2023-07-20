@@ -145,7 +145,7 @@ def pending():
         if BUZZER and SAVE_BUZZER:
             import buzzer
             buzzer.save_triggered() # Acoustic notification for save.
-        if LED:
+        if LED and SAVE_LED:
             import led
             led.save()
         frame = frametools.frame_store[0]  # Get the wanted frame, be it current or a previous frame.
