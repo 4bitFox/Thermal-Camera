@@ -1,7 +1,7 @@
 Python                            3.9.2           Python Software Foundation License v2
 
-program/modules/pylepton          2023-06-13      MIT License
-program/modules/v4l2lepton3       2023-07-14      GNU Lesser General Public License v3
+../program/modules/pylepton       2023-06-13      MIT License
+../program/modules/v4l2lepton3    2023-07-14      GNU Lesser General Public License v3
 Adafruit-Blinka                   8.19.0          MIT License
 adafruit-circuitpython-busdevice  5.2.6           MIT License
 adafruit-circuitpython-mlx90640   1.2.16          MIT License
