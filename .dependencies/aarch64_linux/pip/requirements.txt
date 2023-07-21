@@ -13,7 +13,7 @@ fonttools==4.40.0
 importlib-resources==6.0.0
 kiwisolver==1.4.4
 matplotlib==3.7.2
-numpy==1.25.1
+numpy==1.24.4
 packaging==23.1
 Pillow==10.0.0
 pyftdi==0.54.0
